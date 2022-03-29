@@ -1,0 +1,49 @@
+1)  Create user "nikhil" with home directory set as "/home/nikhil"
+
+  |a) nikhil user should have "/bin/sh" shell for his environment
+    
+
+   ubuntu@ip-172-31-83-207:~$ sudo useradd nikhil                            #added user nikhil
+   ubuntu@ip-172-31-83-207:~$ sudo usermod -d home/nikhil nikhil             #changed home directory of user nikhil
+       
+   ubuntu@ip-172-31-83-207:~$ sudo tail /etc/passwd                          #used this command to check the path
+   nikhil:x:1984:1984::home/nikhil:/bin/sh
+
+   b) His password should expire in 9 days and 2 days before password expiry, he should get warning. User account must expire in 1 month from creation date
+
+   ubuntu@ip-172-31-83-207:~$ sudo passwd nikhil                             #updated password for user nikhil
+   New password:
+   Retype new password:
+   passwd: password updated successfully
+
+   ubuntu@ip-172-31-83-207:~$ sudo chage -l nikhil                           # to change the details of user
+  BEFORE
+   Last password change                                    : Mar 23, 2022
+   Password expires                                        : never
+   Password inactive                                       : never
+   Account expires                                         : never
+   Minimum number of days between password change          : 0
+   Maximum number of days between password change          : 99999
+   Number of days of warning before password expires       : 7
+         
+  ubuntu@ip-172-31-83-207:~$ sudo chage -M 9 nikhil           # password expire in 9 days
+  ubuntu@ip-172-31-83-207:~$ sudo chage -E 2022-04-23 nikhil  # expire in one month means (march 23 - Apr 23)
+  ubuntu@ip-172-31-83-207:~$ sudo chage -W 2 nikhil           # gives warning of password expiry before 2days
+  ubuntu@ip-172-31-83-207:~$ sudo chage -l nikhil
+   AFTER
+   Last password change                                    : Mar 23, 2022
+   Password expires                                        : Apr 01, 2022
+   Password inactive                                       : never
+   Account expires                                         : Apr 23, 2022
+   Minimum number of days between password change          : 9
+   Maximum number of days between password change          : 9
+   Number of days of warning before password expires       : 2
+
+
+
+2) Inside folder "/" , create new home directory as "nikhil" (/nikhil) and setup this folder as a home directory for user "nikhil"
+
+   ubuntu@ip-172-31-83-207:~$ sudo mkdir nikhil                              #created folder nikhil
+   ubuntu@ip-172-31-83-207:~$ sudo usermod -d /nikhil/nikhil nikhil          #changed home directory of user nikhil to /nikhil/nikhil
+   ubuntu@ip-172-31-83-207:~$ sudo tail /etc/passwd
+   nikhil:x:1984:1984::/nikhil/nikhil:/bin/sh
