@@ -1,0 +1,72 @@
+1)  List out 5 files in your system which consuming most of the disk space
+  
+ ubuntu@ip-172-31-83-207:~   $du -sh * | sort -nr | head -n5
+8.0K    shub
+4.0K    uma
+4.0K    nikhil
+4.0K    navina
+0       nohup.out
+   ubuntu@ip-172-31-83-207:~   $ du -sh * | sort -n | head -n5
+0       file1.txt
+0       nohup.out
+4.0K    navina
+4.0K    nikhil
+4.0K    uma
+
+
+2) Create one common folder in such way that anyone can create files inside that independently and should not be able to delete other users files from that common folder.
+  ubuntu@ip-172-31-83-207:~$ sudo mkdir filemanagement         #created folder filesystem
+  ubuntu@ip-172-31-83-207:~$ cd /home/ubuntu/filemanagement
+  ubuntu@ip-172-31-83-207:~/filemanagement$ touch a.txt
+  ubuntu@ip-172-31-83-207:~/filemanagement$ ls
+  ubuntu@ip-172-31-83-207:~/filemanagement$ chmod 774 a.txt      #774 means 7= rwx, 4 = r-others can only read
+  ubuntu@ip-172-31-83-207:~/filemanagement$ ls -l
+  total 0
+  -rwxrwxr-- 1 ubuntu ubuntu 0 Mar 23 16:51 a.txt
+
+
+3) Create user name "shubham" and add that user in the group "adm"
+      a) Create folder /data , change owner and group as  "root:adm
+      b) Change /data permission such a way that user can able to write data in this folder and ownership of files or folder
+      which you creates in this folder should be same as parent folder i.e /data folder permission (root:adm)
+
+</>#
+..      root  adm   /data
+
+</data>#
+rw_rw_r  root  adm test.txt
+
+
+              ubuntu@ip-172-31-83-207:~$ useradd -g adm shubham          # or $useradd shubhan   & $groupadd shubham
+              ubuntu@ip-172-31-83-207:~$ id shubham
+              uid=1985(shubham) gid=4(adm) groups=4(adm)
+
+              a) Create folder /data , change owner and group as  "root:adm 
+             
+              ubuntu@ip-172-31-83-207:~$ sudo su                         #go into root user
+              root@ip-172-31-83-207:/home/ubuntu# mkdir data                     #created folder /data
+              root@ip-172-31-83-207:/home/ubuntu# ls
+              root@ip-172-31-83-207:/home/ubuntu# chown root:adm data/              #change ownership of both owner & group as well to root:adm
+              root@ip-172-31-83-207:/home/ubuntu# ls -l
+              drwxr-xr-x  2 root   adm    4096 Mar 23 18:28 data
+
+
+         
+              b) Change /data permission such a way that user can able to write data in this folder and ownership of files or folder
+              which you creates in this folder should be same as parent folder i.e /data folder permission (root:adm)
+
+             root@ip-172-31-83-207:/home/ubuntu# cd data/                 #to to that folder data and change ownership again
+             root@ip-172-31-83-207:/home/ubuntu/data# touch a.txt         #create file
+             root@ip-172-31-83-207:/home/ubuntu/data# ls
+             a.txt
+             root@ip-172-31-83-207:/home/ubuntu/data# chown root:adm a.txt     #change ownership
+             root@ip-172-31-83-207:/home/ubuntu/data# chmod 664 a.txt          # changed file permission to 664 - rw rw r 
+             root@ip-172-31-83-207:/home/ubuntu/data# ls -l
+             total 0
+             -rw-rw-r-- 1 root adm 0 Mar 23 18:32 a.txt
+
+
+              
+
+
+
