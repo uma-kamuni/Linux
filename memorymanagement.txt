@@ -1,0 +1,41 @@
+2) Find out the number of process is in run queue and blocking queue.
+
+ubuntu@ip-172-31-86-161:~$ vmstat
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 0  0      0 399244  20844 414856    0    0   115     9   17   45  0  0 99  0  0
+r = running que , b= blocking queue
+
+
+
+1) Setup additional swap space in the system to solve low memory issue.  The swap which you added should be available post reboot.
+
+
+ubuntu@ip-172-31-86-161:~$ cd /
+ubuntu@ip-172-31-86-161:/$ sudo -i
+root@ip-172-31-86-161:~# cd /
+root@ip-172-31-86-161:/# mkdir folder
+root@ip-172-31-86-161:/# cd folder
+root@ip-172-31-86-161:/folder# touch swapfile
+root@ip-172-31-86-161:/folder# ls
+swapfile
+root@ip-172-31-86-161:/folder# cd ..
+root@ip-172-31-86-161:/# dd if=/dev/zero of=/folder/swapfile bs=1024 count=1024
+1024+0 records in
+1024+0 records out
+1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.00337986 s, 310 MB/s
+
+root@ip-172-31-86-161:/# ll /folder/swapfile
+-rw-r--r-- 1 root root 1048576 Mar 28 10:44 /folder/swapfile
+
+root@ip-172-31-86-161:/# mkswap /folder/swapfile
+mkswap: /folder/swapfile: insecure permissions 0644, 0600 suggested.
+Setting up swapspace version 1, size = 1020 KiB (1044480 bytes)
+no label, UUID=732b7789-8159-4bef-911a-b97f901c8fde
+
+root@ip-172-31-86-161:/# swapon -s
+Filename                                Type            Size    Used    Priority
+/folder/swapfile                        file            1020    0       -2
+
+
+
