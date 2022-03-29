@@ -1,0 +1,88 @@
+1)  List out highest priority process in the system
+
+ubuntu@ip-172-31-83-207:~$ top
+top - 19:08:38 up 16:14,  1 user,  load average: 0.00, 0.00, 0.00
+Tasks: 107 total,   1 running, 105 sleeping,   1 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :    968.9 total,    233.0 free,    164.8 used,    571.1 buff/cache
+MiB Swap:      0.0 total,      0.0 free,      0.0 used.    644.0 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 root      20   0  168668  12184   7816 S   0.0   1.2   0:07.91 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
+      3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 rcu_gp
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 rcu_par_gp
+      6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker/0:0H-events_highpri
+      9 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 mm_percpu_wq
+     10 root      20   0       0      0      0 S   0.0   0.0   0:00.00 rcu_tasks_rude_
+     11 root      20   0       0      0      0 S   0.0   0.0   0:00.00 rcu_tasks_trace
+     12 root      20   0       0      0      0 S   0.0   0.0   0:00.66 ksoftirqd/0
+     13 root      20   0       0      0      0 I   0.0   0.0   0:02.21 rcu_sched
+     14 root      rt   0       0      0      0 S   0.0   0.0   0:00.42 migration/0
+     15 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 idle_inject/0
+     16 root      20   0       0      0      0 S   0.0   0.0   0:00.00 cpuhp/0
+     17 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kdevtmpfs
+     18 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 netns
+     19 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 inet_frag_wq
+     20 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kauditd
+     21 root      20   0       0      0      0 S   0.0   0.0   0:00.02 khungtaskd
+     22 root      20   0       0      0      0 S   0.0   0.0   0:00.00 oom_reaper
+     
+
+                                   OR
+
+ubuntu@ip-172-31-83-207:~$ ps -eo pid,ppid,cmd,%mem,%cpu,nice --sort=nice | tail
+  48061     661 sshd: ubuntu [priv]          0.8  0.0   0
+  48064       1 /lib/systemd/systemd --user  0.9  0.0   0
+  48065   48064 (sd-pam)                     0.4  0.0   0
+  48141   48061 sshd: ubuntu@pts/0           0.5  0.0   0
+  48142   48141 -bash                        0.5  0.0   0
+  48153   48142 top                          0.3  0.0   0
+  48164   48142 ps -eo pid,ppid,cmd,%mem,%c  0.3  0.0   0
+  48165   48142 tail                         0.0  0.0   0
+     25       2 [ksmd]                       0.0  0.0   5
+     26       2 [khugepaged]                 0.0  0.0  19
+ubuntu@ip-172-31-83-207:~$ ls
+
+
+
+
+2) Open terminal with 2 tabs or sessions
+    a)  run command "vmstat 1"
+    b) switch to another tab,  pause  running vmstat command for few seconds and resume it again
+
+use appropriate SIGNALS to do this activity.
+
+(1 st session)
+ubuntu@ip-172-31-83-207:~$ vmstat 1
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 0  0      0 238812  34692 550248    0    0    20    56   13   55  1  0 99  0  0
+ 0  0      0 238804  34692 550248    0    0     0     0   21   29  0  0 100  0  0
+^Z
+[1]+  Stopped                 vmstat 1
+
+(2nd Session)
+ubuntu@ip-172-31-83-207:~$ vmstat 1
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 234328  34700 550260    0    0    20    56   13   55  1  0 99  0  0
+ 0  0      0 234320  34700 550260    0    0     0     0   22   25  0  0 100  0  0
+ 0  0      0 234320  34700 550260    0    0     0     0   18   29  0  0 100  0  0
+^Z
+[1]+  Stopped                 vmstat 1
+
+
+
+
+3)  Find the process which is sleeping in "wait" state.
+ubuntu@ip-172-31-83-207:~$ ps -l                                 #to see processes associated with the current shell
+F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000   48605   48604  0  80   0 -  2514 do_wai pts/0    00:00:00 bash
+0 R  1000   48620   48605  0  80   0 -  2635 -      pts/0    00:00:00 ps
+
+
+means if a process is in Sleep state, the WCHAN field shows the system that the process is waiting on.
+SLEEPING state indicates the process is currently waiting on certain resources
+
+
